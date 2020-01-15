@@ -8,9 +8,9 @@ export const Types = {
 };
 
 const INITIAL_STATE = {
-  coins: parseInt(localStorage.getItem("coin")) || 0,
+  coins: parseFloat(localStorage.getItem("coin")) || 0,
   coins_per_click: 1,
-  coins_per_second: parseInt(localStorage.getItem("coins_per_second")) || 0,
+  coins_per_second: parseFloat(localStorage.getItem("coins_per_second")) || 0,
   shop_modal: false,
 };
 

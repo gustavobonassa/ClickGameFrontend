@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Background, Content, Header, Title, ShopCoin, Body } from './styles';
+import { Container, Background, Content, Header, Title, ShopCoin, Body, MenuShop } from './styles';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -8,41 +8,80 @@ import { Creators as ShopActions } from '../../../store/ducks/shop';
 import coin from '../../../assets/images/coin.svg';
 import close from '../../../assets/images/close.svg';
 import ShopItem from './ShopItem';
-import bot from '../../../assets/images/bot.svg'
+import numberFormat from '../../../util/numberFormat';
+import getShopItems from './ShopItem/shopItems';
+import './styles.css';
+
+import toastr from 'toastr'
+import 'toastr/build/toastr.min.css'
 
 class Shop extends React.Component {
-  buyBot = () => {
-    const { botInfo } = this.props;
-    if (botInfo.value <= this.props.coinsInfo.coins) {
-      this.props.removeCoins(botInfo.value);
-      this.props.changeCoinsPerSecond(botInfo.clicks_per_unity);
-      this.props.addBot();
+  state = {
+    selectedShop: "cps",
+  }
+
+  buy = (item) => {
+    const { shop } = this.props;
+    if (shop[item].value <= this.props.coinsInfo.coins) {
+      this.props.removeCoins(shop[item].value);
+      this.props.changeCoinsPerSecond(shop[item].clicks_per_unity);
+      this.props.buyItem(item);
+    } else {
+      toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "500",
+        "timeOut": "1000",
+        "extendedTimeOut": "500",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
+      toastr.clear()
+      toastr.error("You do not have enough money", "Shop error");
     }
   }
 
   render() {
     const coins = this.props.coinsInfo.coins;
+    const { selectedShop } = this.state;
+    const shopItems = getShopItems(this.props);
     return (
       <Container>
-        <Content>
+        <Content className="modal">
           <Header>
             <Title>
               <span>Shop</span>
             </Title>
-            <ShopCoin className="ui teal label"><img src={coin} alt="Coin" width="20" /><span>{coins} coins</span></ShopCoin>
+            <ShopCoin className="ui teal label"><img src={coin} alt="Coin" width="20" /><span>{numberFormat(coins)} coins</span></ShopCoin>
             <button onClick={() => { this.props.closeShopModal() }}>
               <img src={close} alt="Close" width="20" />
             </button>
           </Header>
+          <MenuShop>
+            <button class={`ui inverted orange button ${selectedShop === 'cps' && 'active'}`} onClick={() => { this.setState({ selectedShop: 'cps' }) }}>Clicks per second shop</button>
+            <button class={`ui inverted orange button ${selectedShop === 'mc' && 'active'}`} onClick={() => { this.setState({ selectedShop: 'mc' }) }}>Mouse click shop</button>
+          </MenuShop>
           <Body>
-            <ShopItem
-              title="Bot"
-              description="Buy this bot to +1 click per second"
-              quantity={this.props.botInfo.quantity}
-              value={this.props.botInfo.value}
-              image={bot}
-              onClick={() => { this.buyBot() }}
-            />
+            {selectedShop === 'cps' ? (
+              shopItems.map(item => (
+                <ShopItem
+                  title={item.title}
+                  description={item.description}
+                  quantity={item.quantity}
+                  value={numberFormat(item.value)}
+                  image={item.image}
+                  onClick={() => { this.buy(item.click) }}
+                />
+              ))
+            ) : 'teste'}
           </Body>
         </Content>
         <Background onClick={() => { this.props.closeShopModal() }} />
@@ -53,7 +92,7 @@ class Shop extends React.Component {
 
 const mapStateToProps = state => ({
   coinsInfo: state.coins,
-  botInfo: state.shop.bot,
+  shop: state.shop,
 });
 
 const mapDispathToProps = dispatch =>

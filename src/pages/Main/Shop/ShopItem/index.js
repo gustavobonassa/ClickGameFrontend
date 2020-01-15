@@ -5,7 +5,9 @@ import coin from '../../../../assets/images/coin.svg';
 const ShopItem = (props) => {
   return (
     <ShopItemStyle>
-      <img src={props.image} alt={props.title} width="100px" height="90px" />
+      <div className="image-item">
+        <img src={props.image} alt={props.title} />
+      </div>
       <Body>
         <Title>{props.title}</Title>
         <Description>{props.description}</Description>

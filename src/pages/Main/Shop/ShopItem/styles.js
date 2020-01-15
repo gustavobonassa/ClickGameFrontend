@@ -5,7 +5,17 @@ const ShopItemStyle = styled.div`
   display: flex;
   height: 100px;
   padding: 5px;
+  margin-bottom: 5px;
 
+  .image-item {
+    width: 100px;
+    height: 90px;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 `;
 
 const Title = styled.span`

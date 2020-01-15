@@ -8,6 +8,7 @@ import { Creators as CoinsActions } from '../../store/ducks/coins';
 import { Creators as ShopActions } from '../../store/ducks/shop';
 import Shop from './Shop';
 import coin from '../../assets/images/coin.svg';
+import numberFormat from '../../util/numberFormat';
 
 class Main extends React.Component {
   componentDidMount() {
@@ -24,7 +25,7 @@ class Main extends React.Component {
 
   render() {
     const coins = this.props.coinsInfo.coins;
-    console.log(this.props)
+    const coins_per_second = this.props.coinsInfo.coins_per_second;
     return (
       <Container>
         <MenuTop>
@@ -33,9 +34,10 @@ class Main extends React.Component {
         <CoinsCount>
           <img src={coin} alt="Coin" width="50" />
           <span>
-            {coins}
+            {numberFormat(coins)}
           </span>
         </CoinsCount>
+        <span>{numberFormat(coins_per_second)} coins/second</span>
         <Button onClick={() => this.addCoin()}>Click me</Button>
         {this.props.shop_modal && (<Shop />)}
       </Container>
@@ -46,7 +48,7 @@ class Main extends React.Component {
 const mapStateToProps = state => ({
   coinsInfo: state.coins,
   shop_modal: state.coins.shop_modal,
-  botInfo: state.shop.bot,
+  shop: state.shop,
 });
 
 const mapDispathToProps = dispatch =>

@@ -58,11 +58,24 @@ const ShopCoin = styled.div`
 
 const Body = styled.div`
   width: 100%;
-  height: 100%;
+  height: 78%;
   display: flex;
-  overflor: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   margin-top: 10px;
+  flex-direction: column;
+`;
+
+const MenuShop = styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  margin-top: 10px;
+
+  button {
+    width: 50%;
+  }
 `;
 
 
-export { Container, Background, Content, Header, Title, ShopCoin, Body };
+export { Container, Background, Content, Header, Title, ShopCoin, Body, MenuShop };
